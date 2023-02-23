@@ -52,7 +52,6 @@ export default function CoverageEligibilityHome() {
 
   async function getCoverages() {
     setCoverageEligibilityRequests(undefined);
-    console.log("getting coverages");
     const res: any = await listRequest({ type: "coverageeligibility" });
     setCoverageEligibilityRequests(
       res.coverageeligibility.map(coverageEligibilityMapper)
