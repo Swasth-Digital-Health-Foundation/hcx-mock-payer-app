@@ -146,7 +146,7 @@ export default function ClaimDetails({
 
   if (!claim)
     return <div className="mt-8">
-      <Loading type="skeleton" length={10} spacing={6} />
+      <Loading type="skeleton" length={10} rowClassName="gap-6" />
     </div>;
 
   const tabList = [

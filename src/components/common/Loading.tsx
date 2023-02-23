@@ -1,10 +1,10 @@
 export default function Loading(props: {
   type: "spinner" | "skeleton";
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
-  spacing?: number;
+  rowClassName?: string;
   length?: number;
 }) {
-  const { spacing, type, maxWidth, length } = props;
+  const { type, maxWidth, rowClassName, length } = props;
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Loading(props: {
             <div className="flex-1 space-y-6 py-1">
               <div className="h-6 bg-slate-500 rounded"></div>
               <div className="space-y-3">
-                <div className={`grid grid-cols-3 gap-${spacing || 4}`}>
+                <div className={`grid grid-cols-3 gap-4 ${rowClassName}`}>
                   {Array(length)
                     .fill("")
                     .map(() => {
