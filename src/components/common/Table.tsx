@@ -1,9 +1,16 @@
 import React from "react";
-import { properText } from "../../utils/StringUtils";
+import { properText, textOrDash } from "../../utils/StringUtils";
 import StatusChip from "./StatusChip";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
+}
+
+// Dictionary with ReactNodes as values and one required key "id" of type string and one optional key "status" of type string
+interface TableRowData {
+  id: string;
+  showActions?: boolean;
+  [key: string]: React.ReactNode;
 }
 
 export default function Table({
@@ -11,22 +18,29 @@ export default function Table({
   subtext,
   action,
   actionText,
-  showRowActions,
+  actionIcon,
   headers,
   data,
   rowActions,
   onRowClick,
+  showBorder = false,
   primaryColumnIndex = 0,
 }: {
   title: string;
   subtext?: string;
   action?: () => void;
+  actionIcon?: React.ReactNode;
   actionText?: string;
-  showRowActions?: (id: string) => boolean;
   headers: string[];
-  data: { [key: string]: string }[];
-  rowActions?: ((id: string) => React.ReactNode)[];
+  data: TableRowData[];
+  rowActions?: {
+    [key: string]: {
+      callback: (id: string) => void;
+      actionType: "danger" | "primary" | "secondary";
+    };
+  };
   onRowClick?: (id: string) => void;
+  showBorder?: boolean;
   primaryColumnIndex?: number;
 }) {
   return (
@@ -40,63 +54,72 @@ export default function Table({
           {action && (
             <button
               type="button"
-              className="block rounded-md bg-indigo-600 py-1.5 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex items-center gap-2 justify-center rounded-md bg-indigo-600 py-1.5 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={action}
             >
+              {actionIcon}
               {actionText}
             </button>
           )}
         </div>
       </div>
-      <div className="mt-8 flow-root">
+      <div className="mt-4 flow-root">
         <div className="-my-2 -mx-6 overflow-x-auto lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-200">
-                <tr>
-                  {headers.map((header, index) => (
-                    <th
-                      scope="col"
-                      className={classNames(
-                        `${
-                          index === 0
-                            ? "py-3.5 pl-6 pr-3 lg:pl-8"
-                            : "px-3 py-3.5"
-                        }`,
-                        "text-left text-sm font-semibold text-gray-900"
-                      )}
-                    >
-                      {properText(header)}
-                    </th>
-                  ))}
-                  {rowActions && (
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-6 lg:pr-8"
-                    >
-                      <span className="sr-only">Actions</span>
-                    </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {data.map((item) => (
+            <table className="min-w-full divide-y divide-gray-300 relative overflow-hidden rounded-lg">
+              {headers.length > 0 && (
+                <thead className="bg-gray-200">
+                  <tr>
+                    {headers.map((header, index) => (
+                      <th
+                        key={index}
+                        scope="col"
+                        className={classNames(
+                          `${
+                            index === 0
+                              ? "py-3.5 pl-6 pr-3 lg:pl-8"
+                              : "px-3 py-3.5"
+                          }`,
+                          "text-left text-sm font-semibold text-gray-900"
+                        )}
+                      >
+                        {properText(header)}
+                      </th>
+                    ))}
+                    {rowActions && (
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-6 lg:pr-8"
+                      >
+                        <span className="sr-only">Actions</span>
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+              )}
+              <tbody className="bg-gray-300">
+                {data.map((item, index) => (
                   <tr
-                    key={item.id}
+                    key={index}
                     className={
                       onRowClick
-                        ? "hover:bg-gray-50 hover:text-gray-900 cursor-pointer bg-white"
+                        ? `hover:bg-gray-50 hover:text-gray-900 cursor-pointer ${
+                            index % 2 === 0 ? "bg-white/80" : "bg-white"
+                          }`
                         : "bg-white"
                     }
                     onClick={() => onRowClick && onRowClick(item.id)}
                   >
                     {headers.map((header, index) => (
                       <td
+                        key={index}
                         className={classNames(
                           index === 0
                             ? "pl-6 pr-3 text-gray-900 lg:pl-8"
                             : "px-3 text-gray-500",
                           index === primaryColumnIndex && "font-medium",
-                          "whitespace-nowrap py-4 text-sm"
+                          "whitespace-nowrap py-4 text-sm ",
+                          showBorder && "border-b-[1px] border-gray-300"
                         )}
                       >
                         {header === "status" ? (
@@ -106,14 +129,39 @@ export default function Table({
                         )}
                       </td>
                     ))}
-                    {rowActions && showRowActions && showRowActions(item.id) ? (
+                    {rowActions && (
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium lg:pr-8">
                         <div className="inline-flex space-x-2">
-                          {rowActions.map((action) => action(item.id))}
+                          {Object.entries(rowActions).map(
+                            ([name, action], index) => (
+                              <button
+                                key={index}
+                                className={classNames(
+                                  item.showActions !== false &&
+                                    action.actionType === "primary" &&
+                                    "bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500",
+                                  item.showActions !== false &&
+                                    action.actionType === "secondary" &&
+                                    "bg-gray-100 hover:bg-gray-200 focus:ring-gray-500",
+                                  item.showActions !== false &&
+                                    action.actionType === "danger" &&
+                                    "bg-red-600 hover:bg-red-700 focus:ring-red-500",
+                                  // showActions === false ? disabled
+                                  item.showActions === false &&
+                                    "bg-gray-300 hover:bg-gray-400 focus:ring-gray-500 pointer-events-none cursor-not-allowed",
+                                  "inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-white focus:outline-none focus:ring-2 focus:ring-offset-2"
+                                )}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  action.callback(item.id);
+                                }}
+                              >
+                                {properText(name)}
+                              </button>
+                            )
+                          )}
                         </div>
                       </td>
-                    ) : (
-                      <div className="w-full bg-white" />
                     )}
                   </tr>
                 ))}
