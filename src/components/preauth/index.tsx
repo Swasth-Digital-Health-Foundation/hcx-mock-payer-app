@@ -98,16 +98,20 @@ export default function PreAuths() {
             aria-hidden="true"
           />
         }
-        headers={[
-          "request_no",
-          "patient_name",
-          "insurance_no",
-          "approved_amount",
-          "requested_amount",
-          "expiry",
-          "provider",
-          "status",
-        ]}
+        headers={
+          preauths
+            ? [
+                "request_no",
+                "patient_name",
+                "insurance_no",
+                "approved_amount",
+                "requested_amount",
+                "expiry",
+                "provider",
+                "status",
+              ]
+            : []
+        }
         onRowClick={(id) => navigate(`/preauths/${id}`)}
         data={
           (preauths || []).map((preauth) => ({
@@ -118,7 +122,7 @@ export default function PreAuths() {
         }
         primaryColumnIndex={1}
       />
-      {!preauths && <Loading />}
+      {!preauths && <Loading type="skeleton" length={5} />}
     </>
   );
 }

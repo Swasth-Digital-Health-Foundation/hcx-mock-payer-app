@@ -159,15 +159,19 @@ export default function Claims() {
             aria-hidden="true"
           />
         }
-        headers={[
-          "request_no", // last 8 digits of request_id
-          "patient_name", // actually name
-          "insurance_no",
-          "requested_amount",
-          "approved_amount",
-          "provider",
-          "status",
-        ]}
+        headers={
+          claims
+            ? [
+                "request_no", // last 8 digits of request_id
+                "patient_name", // actually name
+                "insurance_no",
+                "requested_amount",
+                "approved_amount",
+                "provider",
+                "status",
+              ]
+            : []
+        }
         onRowClick={(request_id) => navigate(`/claims/${request_id}`)}
         data={
           (claims || []).map((claim) => ({
@@ -178,7 +182,7 @@ export default function Claims() {
         }
         primaryColumnIndex={1}
       />
-      {!claims && <Loading />}
+      {!claims && <Loading type="skeleton" length={5} />}
     </>
   );
 }

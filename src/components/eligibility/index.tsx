@@ -76,14 +76,18 @@ export default function CoverageEligibilityHome() {
             aria-hidden="true"
           />
         }
-        headers={[
-          "request_no",
-          "patient_name",
-          "provider",
-          "insurance_no",
-          "expiry",
-          "status",
-        ]}
+        headers={
+          coverageEligibilityRequests
+            ? [
+                "request_no",
+                "patient_name",
+                "provider",
+                "insurance_no",
+                "expiry",
+                "status",
+              ]
+            : []
+        }
         onRowClick={setSelectedRequest}
         data={(coverageEligibilityRequests || []).map((coverage) => ({
           ...coverage,
@@ -132,7 +136,7 @@ export default function CoverageEligibilityHome() {
           />
         </Modal>
       )}
-      {!coverageEligibilityRequests && <Loading />}
+      {!coverageEligibilityRequests && <Loading type="skeleton" length={5} />}
     </>
   );
 }
