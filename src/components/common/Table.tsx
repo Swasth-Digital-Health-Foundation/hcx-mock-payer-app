@@ -18,6 +18,7 @@ export default function Table({
   subtext,
   action,
   actionText,
+  actionIcon,
   headers,
   data,
   rowActions,
@@ -28,6 +29,7 @@ export default function Table({
   title: string;
   subtext?: string;
   action?: () => void;
+  actionIcon?: React.ReactNode;
   actionText?: string;
   headers: string[];
   data: TableRowData[];
@@ -52,8 +54,10 @@ export default function Table({
           {action && (
             <button
               type="button"
-              className="block rounded-md bg-indigo-600 py-1.5 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex items-center gap-2 justify-center rounded-md bg-indigo-600 py-1.5 px-3 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={action}
             >
+              {actionIcon}
               {actionText}
             </button>
           )}
