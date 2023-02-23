@@ -102,13 +102,6 @@ export default function CoverageEligibilityHome() {
             actionType: "danger",
           },
         }}
-        showRowActions={(id) => {
-          return (
-            coverageEligibilityRequests.find(
-              (request) => request.request_id === id
-            )?.status === "Pending"
-          );
-        }}
         primaryColumnIndex={1}
       />
       {selectedRequest && (

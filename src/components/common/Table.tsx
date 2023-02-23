@@ -18,7 +18,6 @@ export default function Table({
   subtext,
   action,
   actionText,
-  showRowActions,
   headers,
   data,
   rowActions,
@@ -30,7 +29,6 @@ export default function Table({
   subtext?: string;
   action?: () => void;
   actionText?: string;
-  showRowActions?: (id: string) => boolean;
   headers: string[];
   data: TableRowData[];
   rowActions?: {
