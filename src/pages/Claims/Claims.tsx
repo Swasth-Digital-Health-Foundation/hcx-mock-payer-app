@@ -7,7 +7,7 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import CommonDataTable from "../../components/CommonDataTable";
 import Loader from "../../common/Loader";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { addAppData } from "../../reducers/app_data";
 import { properText } from "../../utils/StringUtils";
 import ModalEditor from "../../components/ModalEditor";
@@ -270,7 +270,7 @@ const ClaimsList:React.FC<claimProps> = ({claimType}:claimProps) => {
      
       const onClaimClick = (id:string) => {
         getClaim(id);
-        navigate(`/payor/claims/detail`)
+        navigate(`/claims/detail`)
       }
 
     return(

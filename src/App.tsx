@@ -26,13 +26,13 @@ function App() {
     <>
       <Routes>
         <Route 
-          path="/payor/login" 
+          path="/" 
           element={<SignIn/>}
         >  
         </Route>
         <Route element={<DefaultLayout />}>
           <Route
-            path="/payor/coverageeligibility/list"
+            path="/coverageeligibility/list"
             element={
               <>
                 <PageTitle title="Coverage Eligibility" />
@@ -41,7 +41,7 @@ function App() {
             }
           />
           <Route
-            path="/payor/coverageeligibility/details"
+            path="/coverageeligibility/details"
             element={
               <>
                 <PageTitle title="Coverage Eligibility" />
@@ -50,7 +50,7 @@ function App() {
             }
           />
           <Route
-            path="/payor/preauth/list"
+            path="/preauth/list"
             element={
               <>
                 <PageTitle title="PreAuthorization" />
@@ -60,7 +60,7 @@ function App() {
           />
           
           <Route
-            path="/payor/preauth/detail"
+            path="/preauth/detail"
             element={
               <>
                 <PageTitle title="PreAuthorization" />
@@ -69,7 +69,7 @@ function App() {
             }
           />
            <Route
-            path="/payor/claims/list"
+            path="/claims/list"
             element={
               <>
                 <PageTitle title="Claims" />
@@ -78,7 +78,7 @@ function App() {
             }
           />
           <Route
-            path="/payor/claims/detail"
+            path="/claims/detail"
             element={
               <>
                 <PageTitle title="Claims" />

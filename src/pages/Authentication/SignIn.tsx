@@ -20,7 +20,6 @@ const SignIn: React.FC = () => {
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [showLoader, setShowLoader] = useState(false);
   const [userError, setUserError] = useState(false);
   const [passError, setPassError] = useState(false);
   let sessionToken = sessionStorage.getItem("hcx_user_token");
@@ -44,7 +43,7 @@ const SignIn: React.FC = () => {
         console.log("participant token", res);
         getParticipantByCode(userName).then((res: any) => {
             dispatch(addParticipantDetails(res["data"]["participants"][0]));
-            navigate("/payor/coverageeligibility/list");
+            navigate("/coverageeligibility/list");
         }).catch((error) => {
           toast.error("Something went wrong. Please contact the administrator" || "Internal Server Error", {
             position: toast.POSITION.TOP_RIGHT
