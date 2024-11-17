@@ -108,6 +108,7 @@ const PreauthList:React.FC<claimProps> = ({claimType}:claimProps) => {
         if (typeof value === "string") {
           value = parseFloat((value as any).split(" ")[1]);
         }
+        console.log(currency)
         return currency + " " + value;
       }
       
@@ -156,11 +157,11 @@ const PreauthList:React.FC<claimProps> = ({claimType}:claimProps) => {
           request_id: claim.request_id,
           request_no: identifier?.value,
           name: resources.patient.name ? resources.patient.name[0].text : "Unnamed",
-          gender: resources.patient.gender,
+          gender: resources.patient ? resources.patient.gender : "NA",
           sub_type : resources.claim.subType !== undefined ? resources.claim.subType.coding[0].code : "Others",
           items,
-          address: resources.patient.address,
-          provider: resources.claim.provider.name,
+          address: resources.patient ? resources.patient.address : "NA",
+          provider: resources.claim.provider ? resources.claim.provider.name : "NA",
           diagnosis: diagnosis,
           insurance_no,
           requested_amount,
